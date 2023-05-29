@@ -406,7 +406,7 @@ for k in range(N_u):
 
 # plot the simulation environment
 fig, ax = plt.subplots()
-ax.set_xlim(-20, 80)
+ax.set_xlim(-15, 75)
 ax.set_ylim(10,100)
 ax.set_aspect('equal', adjustable='box')
 ax.set_xlabel('x (km)')
@@ -427,32 +427,38 @@ for i in range(len(Pn)):
 ax.scatter(Wf[:,0], Wf[:,1], color='red')
 
 # plot communication range of GCS with dashed black circle
-circle = plt.Circle((P[0], P[1]), R_c, color='black', fill=False, linestyle='--')
-ax.add_artist(circle)
-circle = plt.Circle((P[0], P[1]), 2*R_c, color='black', fill=False, linestyle='--')
-ax.add_artist(circle)
-circle = plt.Circle((P[0], P[1]), 3*R_c, color='black', fill=False, linestyle='--')
+circle = plt.Circle((P[0], P[1]), R_c, color='black', fill=False, linestyle='--',linewidth=1)
 ax.add_artist(circle)
 
 
 # plot FF as rectangle patch with cyan color and black solid edge, then add annotation
 patch = mpatches.Polygon(ff[0], color='cyan', ec='black')
 FF_patch = ax.add_patch(patch)
+FF_path_plot = ax.plot(ff_traj[0,0], ff_traj[0,1], 'k-', linewidth=1)
 
 # plot UAVs with scatter and plot UAV_traj with line plot
 UAV_scatter = []
+comm_range = []
 for i in range(N_u):
     UAV_scatter.append(ax.scatter(uav_traj[i][0,0], uav_traj[i][0,1],marker='^',s=8))
+    comm_range.append(ax.add_artist(plt.Circle((uav_traj[i][0,0], uav_traj[i][0,1]), R_c, color='blue', fill=False, linestyle='--',linewidth=1)))
 
 def animate(i):
     for k in range(N_u):
         UAV_scatter[k].set_offsets((uav_traj[k][i+1,0], uav_traj[k][i+1,1]))
+        comm_range[k].center = (uav_traj[k][i+1,0], uav_traj[k][i+1,1])
     
+    FF_patch.set_xy(ff[i+1])
+    FF_path_plot[0].set_data(ff_traj[:i+1,0], ff_traj[:i+1,1])
+
     obj = []
     for k in range(N_u):
         obj.append(UAV_scatter[k])
+        obj.append(comm_range[k])
+    obj.append(FF_patch)
+    obj.append(FF_path_plot[0])
     return obj
 
 
-ani = animation.FuncAnimation(fig, animate, frames=len(t)-1, interval=dt, blit=False)
-ani.save('animation.mp4', fps=1/dt, progress_callback=lambda i, n: print('Progress {:.2f}%'.format(i/n*100)))
+ani = animation.FuncAnimation(fig, animate, frames=len(t)-1, interval=dt/500, blit=False)
+ani.save('animation.mp4', fps=500*1/dt, dpi=300, progress_callback=lambda i, n: print('Progress {:.2f}%'.format(i/n*100)))

@@ -419,7 +419,7 @@ for i in range(len(Pn)):
 # plot UAVs with scatter and black unfilled triangle
 ax.scatter(Pu[:,0], Pu[:,1], color='black', marker='^')
 # plot one annotation for all UAVs
-ax.annotate('UAVs', xy=(Pu[0][0], Pu[0][1]), xytext=(Pu[0][0]+8, Pu[0][1]-2))
+ax.annotate('UAVs', xy=(Pu[0][0], Pu[0][1]), xytext=(Pu[0][0]+2, Pu[0][1]-1))
 
 # plot waypoints of FF with red scatter
 ax.scatter(Wf[:,0], Wf[:,1], color='red')
@@ -433,24 +433,24 @@ circle = plt.Circle((P[0], P[1]), 3*R_c, color='black', fill=False, linestyle='-
 ax.add_artist(circle)
 
 # plot Center of UAVs with black x scatter
-ax.scatter(Wuc[:,0], Wuc[:,1], color='black', marker='x', s=10)
+# ax.scatter(Wuc[:,0], Wuc[:,1], color='black', marker='x', s=10)
 
 # plot FF as rectangle patch with cyan color and black solid edge, then add annotation
-for tt in t_arv:
-    patch = mpatches.Polygon(ff[tt], color='cyan', ec='black')
-    ax.add_patch(patch)
-    ax.annotate('FF', xy=(ff[tt][0,0], ff[tt][0,1]), xytext=(ff[tt][0,0]+1, ff[tt][0,1]+1))
+# for tt in t_arv:
+patch = mpatches.Polygon(ff[0], color='cyan', ec='black')
+ax.add_patch(patch)
+ax.annotate('FF', xy=(ff[0][0,0], ff[0][0,1]), xytext=(ff[0][0,0]+1, ff[0][0,1]+1))
 
-ff_traj = np.array(ff_traj)
+# ff_traj = np.array(ff_traj)
 # plot FF trajectory with line plot
-ax.plot(ff_traj[:,0], ff_traj[:,1], color='black')
+# ax.plot(ff_traj[:,0], ff_traj[:,1], color='black')
 
 # plot UAVs with scatter and plot UAV_traj with line plot
-for i in range(N_u):
-    ax.scatter(UAVs[i][:,0], UAVs[i][:,1], marker='x', s=10)
-    ax.plot(uav_traj[i][:,0], uav_traj[i][:,1])
+# for i in range(N_u):
+#     ax.scatter(UAVs[i][:,0], UAVs[i][:,1], marker='x', s=10)
+#     ax.plot(uav_traj[i][:,0], uav_traj[i][:,1])
 
-ax.set_xlim(-20, 80)
+ax.set_xlim(-15, 75)
 ax.set_ylim(10,100)
 ax.set_aspect('equal', adjustable='box')
 ax.set_xlabel('x (km)')
